@@ -7,10 +7,6 @@ export const calculators = {
         name: "단백질 섭취량 계산기",
         component: () => import("./health/protein")
     },
-    'loan_calculator': {
-        name: "대출 상환 계산기",
-        component: () => import("./finances/loan")
-    },
     'bmi_calculator': {
         name: "BMI 계산기",
         component: () => import("./health/bmi")
@@ -18,8 +14,33 @@ export const calculators = {
     'bmr_calculator': {
         name: "기초 대사량(BMR) 계산기",
         component: () => import("./health/bmr")
-    }
-    // 다른 계산기들도 여기에 추가...
+    },
+    'body_fat_calculator': {
+        name: "체지방률 계산기",
+        component: () => import("./health/bodyfat")
+    },
+
+    // 재정
+    'loan_calculator': {
+        name: "대출 상환 계산기",
+        component: () => import("./finances/loan")
+    },
+
+    // 생활
+    'electricity_calculator': {
+        name: "체지방률 계산기",
+        component: () => import("./life/electricity")
+    },
+
+    // 취미
+    'travel_expense_calculator': {
+        name: "여행경비 계산기",
+        component: () => import("./hobby/travel")
+    },
+    'photo_storage_calculator': {
+        name: "사진 용량 계산기",
+        component: () => import("./hobby/photo")
+    },
 };
 
 export const categories = [
