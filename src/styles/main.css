@@ -1,3 +1,4 @@
+/* 기본 스타일 */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -8,7 +9,7 @@ body {
 }
 
 .container {
-    max-width: 600px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 15px;
 }
@@ -20,63 +21,12 @@ h1 {
     text-align: center;
 }
 
+/* 카테고리 PC 스타일 */
 .categories-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
+    display: none; /* 모바일에서 기본적으로 숨김 */
 }
 
-.category {
-    background-color: #f8f8f8;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100px;
-    padding: 10px;
-    text-align: center;
-}
-
-.category:hover {
-    background-color: #e0e0e0;
-}
-
-.category img {
-    width: 30px;
-    height: 30px;
-    margin-bottom: 5px;
-}
-
-.category p {
-    margin: 0;
-    font-size: 0.9em;
-}
-
-.dropdown-content {
-    position: absolute;
-    background-color: #ffffff;
-    min-width: 150px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    z-index: 1;
-}
-
-/* .dropdown:hover .dropdown-content {
-    display: block;
-} */
-
-.dropdown-content a {
-    color: #333333;
-    padding: 8px 12px;
-    text-decoration: none;
-    display: block;
-    font-size: 0.9em;
-}
-
-.dropdown-content a:hover {
-    background-color: #f8f8f8;
-}
-
+/* 계산기 섹션 */
 .section {
     margin-top: 20px;
     background-color: #ffffff;
@@ -85,17 +35,239 @@ h1 {
     border-radius: 4px;
 }
 
-.back-button {
-    margin-top: 15px;
-    padding: 6px 12px;
-    background-color: #f8f8f8;
-    color: #333333;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
+/* 모바일 메뉴 버튼 */
+.mobile-menu-button {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    font-size: 0.9em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 102;
+    transition: background-color 0.2s;
 }
 
-.back-button:hover {
-    background-color: #e0e0e0;
+.mobile-menu-button:hover {
+    background-color: #f5f5f5;
+}
+
+/* 모바일 메뉴 오버레이 */
+.mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 100;
+}
+
+.mobile-menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 모바일 메뉴 컨테이너 */
+.mobile-menu-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 80%;
+    max-width: 320px;
+    background: white;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%);
+    transition: transform 0.3s ease-out;
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-menu-container.active {
+    transform: translateX(0);
+}
+
+/* 모바일 메뉴 헤더 */
+.mobile-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.mobile-menu-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.mobile-menu-header button {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.mobile-menu-header button:hover {
+    background-color: #f5f5f5;
+}
+
+/* 모바일 메뉴 콘텐츠 */
+.mobile-menu-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.mobile-category-item {
+    border-bottom: 1px solid #eee;
+}
+
+.mobile-category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.mobile-category-header:hover {
+    background-color: #f5f5f5;
+}
+
+.mobile-category-header img {
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+}
+
+.mobile-category-header span {
+    flex: 1;
+    font-weight: 500;
+}
+
+.mobile-category-header svg {
+    transition: transform 0.3s ease;
+    color: #666;
+}
+
+.mobile-category-header.active svg {
+    transform: rotate(90deg);
+}
+
+/* 모바일 드롭다운 메뉴 */
+.mobile-dropdown-items {
+    background-color: #f5f5f5;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+}
+
+.mobile-dropdown-items.active {
+    max-height: 500px;
+}
+
+.mobile-dropdown-item {
+    display: block;
+    padding: 12px 20px 12px 56px;
+    color: #666;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.mobile-dropdown-item:hover {
+    background-color: #eee;
+}
+
+.mobile-dropdown-item.active {
+    color: #2563eb;
+    background-color: #eff6ff;
+    font-weight: 500;
+}
+
+/* PC 버전 스타일 (768px 이상) */
+@media (min-width: 768px) {
+    .mobile-menu-button {
+        display: none;
+    }
+
+    .categories-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .dropdown {
+        position: relative;
+    }
+
+    .category {
+        background-color: #f8f8f8;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 10px;
+        width: 100px;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .category:hover {
+        background-color: #e0e0e0;
+    }
+
+    .category img {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 5px;
+    }
+
+    .category p {
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .dropdown-content {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        min-width: 200px;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        padding: 8px 0;
+        z-index: 100;
+    }
+
+    .dropdown-content a {
+        display: block;
+        padding: 8px 16px;
+        color: #333;
+        text-decoration: none;
+        transition: background-color 0.2s;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f5f5f5;
+    }
 }

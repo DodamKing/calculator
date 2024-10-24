@@ -43,7 +43,6 @@ const ProteinIntakeCalculator = () => {
 
     const styles = {
         container: {
-            maxWidth: '500px',
             margin: '0 auto',
             padding: '30px',
             backgroundColor: '#f0fff0',

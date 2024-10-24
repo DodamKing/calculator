@@ -45,7 +45,6 @@ const WHRCalculator = () => {
 
     const styles = {
         container: {
-            maxWidth: isMobile ? '100%' : '600px',
             margin: '0 auto',
             padding: isMobile ? '15px' : '30px',
             backgroundColor: '#E3F2FD', // 밝은 파란색 배경

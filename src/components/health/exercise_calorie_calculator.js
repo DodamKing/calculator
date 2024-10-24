@@ -103,7 +103,6 @@ const ExerciseCalorieCalculator = () => {
 
     const styles = {
         container: {
-            maxWidth: isMobile ? '100%' : '600px',
             margin: '0 auto',
             padding: isMobile ? '15px' : '30px',
             backgroundColor: '#E8F5E9',
