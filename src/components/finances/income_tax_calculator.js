@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Wallet, Calculator, BadgePercent, Users, Heart, ArrowRight, PiggyBank, MinusCircle } from 'lucide-react';
 
-// 추가 사항 연봉, 설명 보완, 요소 추가 설명, 계산 로직
 const IncomeTaxCalculator = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-    const [monthlyIncome, setMonthlyIncome] = useState('');
+    const [incomeType, setIncomeType] = useState('monthly'); // 'monthly' or 'yearly'
+    const [income, setIncome] = useState('');
     const [dependents, setDependents] = useState('');
     const [children, setChildren] = useState('');
     const [taxAmount, setTaxAmount] = useState(null);
     const [localTaxAmount, setLocalTaxAmount] = useState(null);
     const [insurance, setInsurance] = useState(null);
     const [finalIncome, setFinalIncome] = useState(null);
+    const [monthlyFinalIncome, setMonthlyFinalIncome] = useState(null);
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -19,41 +20,46 @@ const IncomeTaxCalculator = () => {
     }, []);
 
     const calculateTax = () => {
-        const income = parseFloat(monthlyIncome) || 0;
+        const inputIncome = parseFloat(income) || 0;
         const dependentCount = parseFloat(dependents) || 0;
         const childrenCount = parseFloat(children) || 0;
 
-        // 근로소득세 간단 계산 (실제 세금계산은 더 복잡하지만 간단히 구현)
-        let tax = 0;
-        const annualIncome = income * 12;
-        
-        // 기본 공제 및 인적공제 적용
-        const deduction = 1500000 + (dependentCount * 150000) + (childrenCount * 200000);
-        const taxableIncome = Math.max(0, income - deduction);
+        // 연간 소득으로 변환
+        const annualIncome = incomeType === 'monthly' ? inputIncome * 12 : inputIncome;
+        const monthlyIncome = incomeType === 'monthly' ? inputIncome : inputIncome / 12;
 
-        // 간단한 세율 적용 (실제 세율은 더 복잡함)
+        // 기본 공제 및 인적공제 적용 (월 기준)
+        const monthlyDeduction = 1500000 + (dependentCount * 150000) + (childrenCount * 200000);
+        const monthlyTaxableIncome = Math.max(0, monthlyIncome - monthlyDeduction);
+
+        // 세율 적용 (연간 소득 기준)
+        let taxRate;
         if (annualIncome <= 12000000) {
-            tax = taxableIncome * 0.06;
+            taxRate = 0.06;
         } else if (annualIncome <= 46000000) {
-            tax = taxableIncome * 0.15;
+            taxRate = 0.15;
         } else if (annualIncome <= 88000000) {
-            tax = taxableIncome * 0.24;
+            taxRate = 0.24;
         } else if (annualIncome <= 150000000) {
-            tax = taxableIncome * 0.35;
+            taxRate = 0.35;
         } else {
-            tax = taxableIncome * 0.42;
+            taxRate = 0.42;
         }
 
-        // 지방소득세 (소득세의 10%)
-        const localTax = tax * 0.1;
+        // 월간 세금 계산
+        const monthlyTax = monthlyTaxableIncome * taxRate;
+        const monthlyLocalTax = monthlyTax * 0.1;
+        const monthlyInsurance = monthlyIncome * 0.0899;
 
-        // 4대보험 계산 (대략적인 계산)
-        const insuranceAmount = income * 0.0899; // 약 8.99% (국민연금 4.5%, 건강보험 3.495%, 고용보험 0.9%, 장기요양 0.095%)
+        // 월간 실수령액 계산
+        const monthlyNet = monthlyIncome - monthlyTax - monthlyLocalTax - monthlyInsurance;
 
-        setTaxAmount(Math.floor(tax));
-        setLocalTaxAmount(Math.floor(localTax));
-        setInsurance(Math.floor(insuranceAmount));
-        setFinalIncome(Math.floor(income - tax - localTax - insuranceAmount));
+        // 연간 금액 설정 (표시용)
+        setTaxAmount(Math.floor(monthlyTax));
+        setLocalTaxAmount(Math.floor(monthlyLocalTax));
+        setInsurance(Math.floor(monthlyInsurance));
+        setFinalIncome(Math.floor(monthlyNet * 12));
+        setMonthlyFinalIncome(Math.floor(monthlyNet));
     };
 
     const formatNumber = (num) => {
@@ -83,14 +89,14 @@ const IncomeTaxCalculator = () => {
         container: {
             margin: '0 auto',
             padding: isMobile ? '15px' : '30px',
-            backgroundColor: '#E3F2FD', // 연한 파란색 배경
+            backgroundColor: '#E3F2FD',
             borderRadius: '10px',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             fontFamily: 'Arial, sans-serif',
         },
         title: {
             textAlign: 'center',
-            color: '#1565C0', // 진한 파란색
+            color: '#1565C0',
             marginBottom: '20px',
             fontSize: isMobile ? '24px' : '28px',
         },
@@ -115,6 +121,15 @@ const IncomeTaxCalculator = () => {
             borderRadius: '5px',
             fontSize: '16px',
             boxSizing: 'border-box',
+        },
+        select: {
+            width: '100%',
+            padding: '10px',
+            border: '1px solid #64B5F6',
+            borderRadius: '5px',
+            fontSize: '16px',
+            backgroundColor: 'white',
+            cursor: 'pointer',
         },
         button: {
             gridColumn: '1 / -1',
@@ -228,13 +243,26 @@ const IncomeTaxCalculator = () => {
             <h2 style={styles.title}>월급 실수령액 계산기</h2>
             <div style={styles.form}>
                 <div style={styles.fullWidth}>
-                    <label style={styles.label}>월급 총액 (원)</label>
+                    <label style={styles.label}>급여 유형</label>
+                    <select
+                        value={incomeType}
+                        onChange={(e) => setIncomeType(e.target.value)}
+                        style={styles.select}
+                    >
+                        <option value="monthly">월급</option>
+                        <option value="yearly">연봉</option>
+                    </select>
+                </div>
+                <div style={styles.fullWidth}>
+                    <label style={styles.label}>
+                        {incomeType === 'monthly' ? '월급' : '연봉'} 총액 (원)
+                    </label>
                     <input
                         type="number"
-                        value={monthlyIncome}
-                        onChange={(e) => setMonthlyIncome(e.target.value)}
+                        value={income}
+                        onChange={(e) => setIncome(e.target.value)}
                         style={styles.input}
-                        placeholder="예: 3000000"
+                        placeholder={incomeType === 'monthly' ? '예: 3000000' : '예: 36000000'}
                     />
                 </div>
                 <div>
@@ -279,7 +307,7 @@ const IncomeTaxCalculator = () => {
                         >
                             <div style={styles.resultLabel}>
                                 <MinusCircle size={20} />
-                                근로소득세
+                                월 근로소득세
                             </div>
                             <div style={styles.resultValue}>{formatNumber(taxAmount)}원</div>
                             <div style={styles.resultCompare}>
@@ -300,7 +328,7 @@ const IncomeTaxCalculator = () => {
                         >
                             <div style={styles.resultLabel}>
                                 <MinusCircle size={20} />
-                                지방소득세
+                                월 지방소득세
                             </div>
                             <div style={styles.resultValue}>{formatNumber(localTaxAmount)}원</div>
                             <div style={styles.resultCompare}>
@@ -321,11 +349,34 @@ const IncomeTaxCalculator = () => {
                         >
                             <div style={styles.resultLabel}>
                                 <MinusCircle size={20} />
-                                4대보험
+                                월 4대보험
                             </div>
                             <div style={styles.resultValue}>{formatNumber(insurance)}원</div>
                             <div style={styles.resultCompare}>
                                 월급의 약 8.99%
+                            </div>
+                        </div>
+
+                        <div 
+                            style={{...styles.resultCard}}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-5px)';
+                                e.currentTarget.style.boxShadow = '0 6px 12px rgba(21, 101, 192, 0.1)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = 'none';
+                            }}
+                        >
+                            <div style={styles.resultLabel}>
+                                <PiggyBank size={20} />
+                                월 실수령액
+                            </div>
+                            <div style={{...styles.resultValue, color: '#2E7D32'}}>
+                                {formatNumber(monthlyFinalIncome)}원
+                            </div>
+                            <div style={styles.resultCompare}>
+                                공제 후 매월 실제 수령하는 금액
                             </div>
                         </div>
 
@@ -342,20 +393,20 @@ const IncomeTaxCalculator = () => {
                         >
                             <div style={styles.resultLabel}>
                                 <PiggyBank size={20} />
-                                예상 실수령액
+                                연간 실수령액
                             </div>
                             <div style={{...styles.resultValue, color: '#2E7D32'}}>
                                 {formatNumber(finalIncome)}원
                             </div>
                             <div style={styles.resultCompare}>
-                                공제 후 실제 수령하는 금액
+                                연간 총 실수령액 (월 실수령액 × 12)
                             </div>
                         </div>
                     </div>
                 </div>
             )}
 
-<div style={styles.infoSection}>
+            <div style={styles.infoSection}>
                 <div style={styles.infoItem}>
                     <div style={styles.infoTitle}>세금 계산 관련 팁</div>
                     <div style={styles.tipsList}>

@@ -72,7 +72,7 @@ export const calculators = {
         component: () => import("./finances/value_added_tax_calculator")
     },
     'income_tax_calculator': {
-        name: "소득세 계산기",
+        name: "월급 실수령액 계산기",
         component: () => import("./finances/income_tax_calculator")
     },
         
@@ -131,9 +131,8 @@ export const categories = [
             { name: "대출 상환 계산기", section: "loan_calculator" },
             { name: "적금/예금 이자 계산기", section: "savings_calculator" },
             { name: "연금 계산기", section: "pension_calculator" },
-            { name: "세금 계산기", section: "tax_calculator" },
             { name: "부가가치세 계산기", section: "value_added_tax_calculator" },
-            { name: "소득세 계산기", section: "income_tax_calculator" }
+            { name: "월급 실수령액 계산기", section: "income_tax_calculator" }
         ]
     },
     // {
