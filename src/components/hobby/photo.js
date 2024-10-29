@@ -68,7 +68,6 @@ const PhotoStorageCalculator = () => {
 
     const styles = {
         container: {
-            maxWidth: isMobile ? '100%' : '800px',
             margin: '0 auto',
             padding: isMobile ? '15px' : '30px',
             backgroundColor: '#f0f8ff',

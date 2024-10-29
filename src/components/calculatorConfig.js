@@ -59,10 +59,10 @@ export const calculators = {
         name: "대출 상환 계산기",
         component: () => import("./finances/loan")
     },
-    // 'savings_calculator': {
-        //     name: "적금/예금 이자 계산기",
-        //     component: () => import("./finances/savings_calculator")
-        // },
+    'savings_calculator': {
+            name: "적금/예금 이자 계산기",
+            component: () => import("./finances/savings_calculator")
+        },
     'pension_calculator': {
         name: "연금 계산기",
         component: () => import("./finances/pension_calculator")
@@ -121,7 +121,6 @@ export const categories = [
             { name: "임대료 대비 구매 가격 계산기", section: "rent_vs_buy_calculator" },
             { name: "부동산 투자 수익률", section: "real_estate_investment_calculator" },
             { name: "부동산 보유세 계산기", section: "property_tax_calculator" },
-            { name: "수익형 부동산 투자 계산기", section: "cash_flow_analysis_calculator" }
         ]
     },
     {
