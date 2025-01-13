@@ -8,8 +8,8 @@ const CalculatorSection = memo(({ currentSection, showWelcome }) => {
     const WelcomeMessage = () => (
         <div style={{ textAlign: 'center', marginTop: '50px' }}>
             <h2>환영합니다!</h2>
-            <p>최고의 계산기 모음 사이트에 오신 것을 환영합니다.</p>
-            <p>원하시는 계산기를 위의 카테고리에서 선택해주세요.</p>
+            <p>다양한 계산기를 한곳에 모아둔 편리한 서비스입니다.</p>
+            <p>건강, 재정, 부동산, 취미까지 필요한 계산기를 위에서 선택해 보세요.</p>
         </div>
     );
 
